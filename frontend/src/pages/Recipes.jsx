@@ -18,6 +18,8 @@ const Recipes = () => {
     const [error, setError] = useState('')
     const [ingredientError, setIngredientError] = useState('')
     const { logoutUser, user } = useAuth()
+    const [search, setSearch] = useState('')
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -82,6 +84,11 @@ const Recipes = () => {
         }
     }
 
+    const filteredRecipes = recipes.filter(r =>
+        r.name.toLowerCase().includes(search.toLowerCase()) ||
+        r.description?.toLowerCase().includes(search.toLowerCase())
+    )
+
     return (
         <div className="page">
             <header>
@@ -89,6 +96,18 @@ const Recipes = () => {
             </header>
 
             {error && <p className="error">{error}</p>}
+
+            <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="🔍 Buscar recetas..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                />
+                {search && (
+                    <button type="button" className="search-clear" onClick={() => setSearch('')}>✕</button>
+                )}
+            </div>
 
             <button onClick={() => setShowForm(!showForm)}>
                 {showForm ? 'Cancelar' : '+ Nueva receta'}
@@ -124,7 +143,12 @@ const Recipes = () => {
             )}
 
             <div className="recipes-grid">
-                {recipes.map(recipe => (
+                {filteredRecipes.length === 0 && (
+                    <p className="no-results">
+                        {search ? `No hay recetas con "${search}"` : 'Aún no tienes recetas. ¡Crea la primera!'}
+                    </p>
+                )}
+                {filteredRecipes.map(recipe => (
                     <div key={recipe.id} className="recipe-card">
                         <h3>{recipe.name}</h3>
                         <p>{recipe.description}</p>

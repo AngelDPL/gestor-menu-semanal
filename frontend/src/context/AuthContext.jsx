@@ -8,24 +8,38 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      getMe()
-        .then(res => setUser(res.data))
-        .catch(() => localStorage.removeItem('token'))
-        .finally(() => setLoading(false))
-    } else {
+    const init = async () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+      if (token) {
+        try {
+          const user = await getMe()
+          setUser(user)
+        } catch {
+          localStorage.removeItem('token')
+          sessionStorage.removeItem('token')
+        }
+      }
       setLoading(false)
     }
+    init()
   }, [])
 
-  const loginUser = (token, userData) => {
-    localStorage.setItem('token', token)
+  const loginUser = (token, userData, remember = false) => {
+    if (remember) {
+      localStorage.setItem('token', token)
+      localStorage.setItem('remember', 'true')
+    } else {
+      sessionStorage.setItem('token', token)
+      localStorage.removeItem('token')
+      localStorage.removeItem('remember')
+    }
     setUser(userData)
   }
 
   const logoutUser = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('remember')
+    sessionStorage.removeItem('token')
     setUser(null)
   }
 

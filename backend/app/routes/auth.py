@@ -44,6 +44,44 @@ def login():
     return jsonify({"access_token": token, "user": user.to_dict()}), 200
 
 
+@auth_bp.route("/update", methods=["POST"])
+@jwt_required()
+def update_info():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    data = request.get_json()
+
+    if "username" in data:
+        existing = User.query.filter_by(username=data["username"]).first()
+        if existing and existing.id != user.id:
+            return jsonify({"error": "El nombre de usuario ya existe"}), 409
+        user.username = data["username"]
+
+    if "email" in data:
+        existing = User.query.filter_by(email=data["email"]).first()
+        if existing and existing.id != user.id:
+            return jsonify({"error": "El email ya está registrado"}), 409
+        user.email = data["email"]
+
+    db.session.commit()
+    return jsonify({"user": user.to_dict()}), 200
+
+
+@auth_bp.route("/change-password", methods=["POST"])
+@jwt_required()
+def change_password():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    data = request.get_json()
+
+    if not user.check_password(data.get("current_password", "")):
+        return jsonify({"error": "La contraseña actual es incorrecta"}), 401
+
+    user.set_password(data["new_password"])
+    db.session.commit()
+    return jsonify({"message": "Contraseña actualizada"}), 200
+
+
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
 def me():

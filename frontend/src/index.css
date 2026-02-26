@@ -63,6 +63,17 @@ input:focus, textarea:focus, select:focus {
   background: white;
 }
 
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-height: unset;
+  padding: 0;
+  cursor: pointer;
+  accent-color: #4f46e5;
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+}
+
 textarea {
   resize: vertical;
   min-height: 80px;
@@ -930,3 +941,104 @@ header button:hover {
     min-width: 80px;
   }
 }
+
+/* ===== SEARCH ===== */
+.search-bar {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  padding-right: 2.5rem;
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  color: #94a3b8;
+  padding: 0.25rem 0.5rem;
+  min-height: unset;
+  font-size: 0.85rem;
+}
+
+.search-clear:hover {
+  background: none;
+  color: #dc2626;
+}
+
+.no-results {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  padding: 2rem 0;
+  grid-column: 1 / -1;
+}
+
+/* ===== PROFILE ===== */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.profile-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-card label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-top: 0.25rem;
+}
+
+.profile-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.success {
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== REMEMBER ME ===== */
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #475569;
+  cursor: pointer;
+}
+
+.remember-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #4f46e5;
+}
+

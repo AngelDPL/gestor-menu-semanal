@@ -7,6 +7,7 @@ import Recipes from './pages/Recipes'
 import MealPlanner from './pages/MealPlanner'
 import Shopping from './pages/Shopping'
 import MealPlanDetail from './pages/MealPlanDetail'
+import Profile from './pages/Profile'
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth()
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/meal-planner" element={<PrivateRoute><MealPlanner /></PrivateRoute>} />
         <Route path="/shopping/:planId" element={<PrivateRoute><Shopping /></PrivateRoute>} />
         <Route path="/meal-planner/:planId" element={<PrivateRoute><MealPlanDetail /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </>
