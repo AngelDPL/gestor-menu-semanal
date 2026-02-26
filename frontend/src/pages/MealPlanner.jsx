@@ -73,7 +73,6 @@ const MealPlanner = () => {
         <div className="page">
             <header>
                 <h1>📅 Planificador Semanal</h1>
-                <button onClick={() => navigate('/recipes')}>🍽 Recetas</button>
             </header>
 
             {error && <p className="error">{error}</p>}
@@ -139,6 +138,7 @@ const MealPlanner = () => {
                             <p>{plan.entries.length} comidas planificadas</p>
                         </div>
                         <div className="plan-actions">
+                            <button onClick={() => navigate(`/meal-planner/${plan.id}`)}>👁 Ver detalle</button>
                             <button onClick={() => navigate(`/shopping/${plan.id}`)}>🛒 Lista de la compra</button>
                             <button onClick={() => handleDelete(plan.id)}>🗑 Eliminar</button>
                         </div>
