@@ -10,7 +10,7 @@ def create_app():
     jwt.init_app(app)
     cors.init_app(app, resources={r"/api/*": {"origins": [
     "http://localhost:5173",
-    "https://gestor-menu-semanal.vercel.app"
+    "https://mealmind-frontend-ixxa.onrender.com"
 ]}})
     
     from .routes.auth import auth_bp
