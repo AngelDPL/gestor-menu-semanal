@@ -12,11 +12,9 @@ shopping_bp = Blueprint("shopping", __name__)
 def generate_shopping_list(plan_id):
     user_id = get_jwt_identity()
     plan = MealPlan.query.filter_by(id=plan_id, user_id=user_id).first_or_404()
-
-    # Borrar lista anterior si existe
+    
     ShoppingItem.query.filter_by(meal_plan_id=plan_id).delete()
 
-    # Agregar ingredientes de todas las recetas del plan
     items = {}
     for entry in plan.entries:
         for ing in entry.recipe.ingredients:

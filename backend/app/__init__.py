@@ -12,8 +12,7 @@ def create_app():
     "http://localhost:5173",
     "https://gestor-menu-semanal.vercel.app"
 ]}})
-
-    # Registrar rutas
+    
     from .routes.auth import auth_bp
     from .routes.recipes import recipes_bp
     from .routes.meal_plan import meal_plan_bp
