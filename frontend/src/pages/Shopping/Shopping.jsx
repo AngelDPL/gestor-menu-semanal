@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getShoppingList, generateShoppingList, toggleShoppingItem } from '../../services/shoppingService'
+import Spinner from '../../components/ui/Spinner'
 
 const Shopping = () => {
     const { planId } = useParams()
@@ -73,10 +74,7 @@ const Shopping = () => {
             )}
 
             {loading ? (
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-10 text-center">
-                    <div className="text-5xl mb-4">⏳</div>
-                    <p className="text-gray-500 text-sm">Cargando lista...</p>
-                </div>
+                <Spinner />
             ) : items.length === 0 ? (
                 <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-10 text-center">
                     <div className="text-5xl mb-4">🛒</div>

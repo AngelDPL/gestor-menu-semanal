@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 import { getRecipes, createRecipe, deleteRecipe } from '../../services/recipeService'
+import { useAuth } from '../../context/AuthContext'
 import RecipeModal from '../../components/RecipeModal'
+import Spinner from '../../components/ui/Spinner'
+import ConfirmModal from '../../components/ui/ConfirmModal'
+import SuccessModal from '../../components/ui/SuccessModal'
+
 
 const emptyForm = {
     name: '', description: '', calories: '', protein: '', carbs: '', fat: '',
@@ -19,6 +24,10 @@ const Recipes = () => {
     const [ingredientError, setIngredientError] = useState('')
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(true)
+    const [confirmDelete, setConfirmDelete] = useState(null)
+    const [showSuccess, setShowSuccess] = useState('')
+
+    const { firstLogin, setFirstLogin, user } = useAuth()
 
     useEffect(() => { fetchRecipes() }, [])
 
@@ -69,12 +78,15 @@ const Recipes = () => {
         }
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async () => {
         try {
-            await deleteRecipe(id)
+            await deleteRecipe(confirmDelete)
+            setConfirmDelete(null)
+            setShowSuccess('Receta eliminada correctamente.')
             fetchRecipes()
         } catch (err) {
             setError(err.message)
+            setConfirmDelete(null)
         }
     }
 
@@ -91,8 +103,8 @@ const Recipes = () => {
                 <button
                     onClick={() => setShowForm(!showForm)}
                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition active:scale-95 border-none shadow-md ${showForm
-                            ? 'bg-white/20 text-white hover:bg-white/30'
-                            : 'bg-white text-indigo-600 hover:bg-indigo-50'
+                        ? 'bg-white/20 text-white hover:bg-white/30'
+                        : 'bg-white text-indigo-600 hover:bg-indigo-50'
                         }`}
                 >
                     {showForm ? '✕ Cancelar' : '+ Nueva receta'}
@@ -231,10 +243,7 @@ const Recipes = () => {
             )}
 
             {loading ? (
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-10 text-center">
-                    <div className="text-5xl mb-4">⏳</div>
-                    <p className="text-gray-500 text-sm">Cargando recetas...</p>
-                </div>
+                <Spinner />
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {filteredRecipes.length === 0 && (
@@ -282,7 +291,7 @@ const Recipes = () => {
                                     ✏️ Editar
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(recipe.id)}
+                                    onClick={() => setConfirmDelete(recipe.id)}
                                     className="flex-1 bg-red-50 hover:bg-red-100 text-red-500 text-sm font-medium py-2 rounded-xl transition border-none shadow-none"
                                 >
                                     🗑 Eliminar
@@ -298,6 +307,49 @@ const Recipes = () => {
                     recipe={editingRecipe}
                     onClose={() => setEditingRecipe(null)}
                     onUpdated={fetchRecipes}
+                />
+            )}
+
+            {firstLogin && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center px-4"
+                    style={{ background: 'rgba(0,0,0,0.6)' }}
+                >
+                    <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm text-center flex flex-col gap-4">
+                        <div className="text-5xl">👋</div>
+                        <h3 className="text-xl font-bold text-gray-800">¡Bienvenido, {user.username}!</h3>
+                        <p className="text-gray-500 text-sm leading-relaxed">
+                            Para ayudarte a empezar hemos preparado
+                            <span className="font-semibold text-indigo-600"> 20 recetas </span>
+                            con sus ingredientes y macros ya calculados.
+                        </p>
+                        <div className="bg-indigo-50 rounded-xl px-4 py-3 flex flex-col gap-1">
+                            <span className="text-2xl">🍽️</span>
+                            <p className="text-indigo-600 text-sm font-medium">¡Ya puedes crear tu primer plan semanal!</p>
+                        </div>
+                        <button
+                            onClick={() => setFirstLogin(false)}
+                            className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2.5 rounded-xl transition active:scale-95 border-none"
+                        >
+                            ¡Empezar! 🚀
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {confirmDelete && (
+                <ConfirmModal
+                    title="¿Eliminar receta?"
+                    message="Esta acción no se puede deshacer."
+                    onConfirm={handleDelete}
+                    onCancel={() => setConfirmDelete(null)}
+                />
+            )}
+
+            {showSuccess && (
+                <SuccessModal
+                    message={showSuccess}
+                    onClose={() => setShowSuccess('')}
                 />
             )}
         </div>

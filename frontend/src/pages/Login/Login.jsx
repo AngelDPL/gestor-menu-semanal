@@ -25,7 +25,7 @@ const Login = () => {
         setError('')
         try {
             const data = await login(form)
-            loginUser(data.access_token, data.user, remember)
+            loginUser(data.access_token, data.user, remember, data.first_login)
             navigate('/recipes')
         } catch (err) {
             setError(err.message)

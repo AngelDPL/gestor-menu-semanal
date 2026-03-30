@@ -6,6 +6,7 @@ const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null)
 	const [loading, setLoading] = useState(true)
+	const [firstLogin, setFirstLogin] = useState(false)
 
 	useEffect(() => {
 		const init = async () => {
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 		init()
 	}, [])
 
-	const loginUser = (token, userData, remember = false) => {
+	const loginUser = (token, userData, remember = false, isFirstLogin = false) => {
 		if (remember) {
 			localStorage.setItem('token', token)
 			localStorage.setItem('remember', 'true')
@@ -34,6 +35,7 @@ export const AuthProvider = ({ children }) => {
 			localStorage.removeItem('remember')
 		}
 		setUser(userData)
+		setFirstLogin(isFirstLogin) 
 	}
 
 	const logoutUser = () => {
@@ -44,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 	}
 
 	return (
-		<AuthContext.Provider value={{ user, loading, loginUser, logoutUser }}>
+		<AuthContext.Provider value={{ user, loading, firstLogin, loginUser, logoutUser, setFirstLogin }}>
 			{children}
 		</AuthContext.Provider>
 	)

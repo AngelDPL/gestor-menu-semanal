@@ -8,6 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    first_login = db.Column(db.Boolean, default=True, nullable=False)
 
     recipes = db.relationship("Recipe", backref="owner", lazy=True)
     meal_plans = db.relationship("MealPlan", backref="owner", lazy=True)
@@ -19,4 +20,9 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     def to_dict(self):
-        return {"id": self.id, "username": self.username, "email": self.email}
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "first_login": self.first_login
+        }

@@ -18,7 +18,7 @@ const Navbar = () => {
 
                 {/* Logo */}
                 <div className="flex items-center gap-2 font-bold text-white text-lg">
-                    🥗 <span className="hidden sm:inline tracking-wide">Gestor Menú</span>
+                    🥗 <span className="hidden sm:inline tracking-wide">MealMind</span>
                 </div>
 
                 {/* Links */}
